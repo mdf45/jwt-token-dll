@@ -8,7 +8,7 @@ openssl req -x509 -sha1 -out test.crt -new -nodes -keyout test.key -newkey rsa:2
 
 ## Добавление .dll после сборки в папку со всеми .dll
 
-```XML
+```xml
 <Target Name="PostBuild" AfterTargets="PostBuildEvent">
   <Exec Command="copy /Y bin\Release\net6.0\JwtToken.dll YOUR_PATH" />
 </Target>
