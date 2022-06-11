@@ -10,8 +10,8 @@ namespace JwtToken
     {
         private SecurityKey SecurityKey { get; }
         private SigningCredentials SigningCredentials { get; }
-        private JwtSecurityTokenHandler TokenHandler { get; set; }
-        private TokenValidationParameters TokenValidationParameters { get; set; }
+        private JwtSecurityTokenHandler TokenHandler { get; }
+        private TokenValidationParameters TokenValidationParameters { get; }
 
         public Manager(string privateKey, string algoritm = SecurityAlgorithms.HmacSha512, TokenValidationParameters parameters = null)
         {
