@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,5 +7,9 @@
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /Y bin\Release\net6.0\JwtToken.dll C:\Users\rezin\source\GlobalLibraries\JwtToken.dll" />
+  </Target>
 
 </Project>
