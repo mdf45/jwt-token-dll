@@ -6,8 +6,4 @@
 
 ## Добавление .dll после сборки в папку со всеми .dll
 
-<code>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y bin\Release\net6.0\JwtToken.dll YOUR_PATH" />
-  </Target>
-</code>
+<code><Target Name="PostBuild" AfterTargets="PostBuildEvent"><Exec Command="copy /Y bin\Release\net6.0\JwtToken.dll YOUR_PATH" /></Target></code>
