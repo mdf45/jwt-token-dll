@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using System.Security.Cryptography;
 
 namespace JwtToken
 {
@@ -13,15 +13,23 @@ namespace JwtToken
         private JwtSecurityTokenHandler TokenHandler { get; }
         private TokenValidationParameters TokenValidationParameters { get; }
 
-        public Manager(string privateKey, string algoritm = SecurityAlgorithms.HmacSha512, TokenValidationParameters parameters = null)
+        public Manager(string rsaPrivateKey)
         {
-            SecurityKey = new SymmetricSecurityKey(Encoding.Default.GetBytes(privateKey));
+            var privateKeyBuffer = new Span<byte>(new byte[rsaPrivateKey.Length]);
+            Convert.TryFromBase64String(rsaPrivateKey, privateKeyBuffer, out _);
 
-            SigningCredentials = new SigningCredentials(SecurityKey, algoritm);
+            var rsa = RSA.Create();
+            rsa.ImportPkcs8PrivateKey(privateKeyBuffer, out var _);
 
-            TokenValidationParameters = parameters ?? new TokenValidationParameters
+            SecurityKey = new RsaSecurityKey(rsa);
+
+            SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.RsaSha256);
+
+            TokenValidationParameters = new TokenValidationParameters
             {
                 ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = true,
+                RequireSignedTokens = true,
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 IssuerSigningKey = SecurityKey
@@ -51,7 +59,7 @@ namespace JwtToken
             {
                 TokenHandler.ValidateToken(token, TokenValidationParameters, out var validatedToken);
 
-                jwtToken = TokenHandler.ReadJwtToken(token);
+                jwtToken = validatedToken as JwtSecurityToken;
 
                 return true;
             }
